@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap');
+
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Noto Sans Devanagari', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Rajdhani', sans-serif;
+    --color-brand-red: #E1261C;
+    --color-brand-red-dark: #B81D15;
+    --color-brand-dark: #1A1A1A;
+    --color-brand-dark-deep: #111111;
+    --color-brand-accent: #F97316;
+}
+
+/* Custom Keyframe Animations */
+@keyframes ticker {
+    0% {
+        transform: translate3d(0, 0, 0);
+    }
+    100% {
+        transform: translate3d(-100%, 0, 0);
+    }
+}
+
+.animate-ticker {
+    display: inline-block;
+    white-space: nowrap;
+    padding-left: 100%;
+    animation: ticker 40s linear infinite;
+}
+
+.animate-ticker:hover {
+    animation-play-state: paused;
+}
+
+@keyframes pulse-live {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.4;
+        transform: scale(1.15);
+    }
+}
+
+.animate-pulse-live {
+    animation: pulse-live 1.5s ease-in-out infinite;
+}
+
+/* High Contrast Mode CSS */
+.high-contrast {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+}
+
+.high-contrast body,
+.high-contrast header,
+.high-contrast footer,
+.high-contrast main,
+.high-contrast nav,
+.high-contrast section,
+.high-contrast div,
+.high-contrast article,
+.high-contrast h1,
+.high-contrast h2,
+.high-contrast h3,
+.high-contrast h4,
+.high-contrast h5,
+.high-contrast h6,
+.high-contrast p,
+.high-contrast span,
+.high-contrast a,
+.high-contrast li {
+    background-color: #000000 !important;
+    color: #FFFF00 !important; /* High contrast yellow text */
+    border-color: #FFFF00 !important;
+}
+
+.high-contrast a:hover,
+.high-contrast button:hover {
+    color: #ffffff !important;
+    background-color: #333333 !important;
+    text-decoration: underline !important;
+}
+
+.high-contrast input,
+.high-contrast select,
+.high-contrast textarea {
+    background-color: #000000 !important;
+    color: #FFFF00 !important;
+    border: 1px solid #FFFF00 !important;
+}
+
+.high-contrast .no-hc-bg {
+    background-color: transparent !important;
+}
