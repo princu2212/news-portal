@@ -1,59 +1,98 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# छत्तीसगढ़ न्यूज़ एक्सप्रेस (CG News Express)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+छत्तीसगढ़ न्यूज़ एक्सप्रेस (CG News Express) एक आधुनिक, तेज़ और उत्तरदायी **निजी हिंदी समाचार पोर्टल** है। यह वेबसाइट छत्तीसगढ़ राज्य के विभिन्न संभागों/जिलों और विषयों (राजनीति, मनोरंजन, खेल, टेक, व्यापार) से संबंधित समाचारों की विस्तृत सूची और विस्तृत पठन अनुभव प्रदान करती है।
 
-## About Laravel
+यह परियोजना डिफ़ॉल्ट लारावेल फ्रेमवर्क को एक पूर्ण-विशेषताओं वाले न्यूज़ पोर्टल के रूप में परिवर्तित करके बनाई गई है।
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🚀 मुख्य विशेषताएं (Key Features)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1. **ब्रांड-संचालित आकर्षक डिज़ाइन (Brand Aesthetics):**
+   - निजी समाचार मीडिया चैनलों के पैटर्न पर आधारित एक प्रीमियम रेड-चारकोल (`#E1261C` और `#1A1A1A`) थीम।
+   - आकर्षक एनिमेशन से सुसज्जित लगातार स्क्रॉल होने वाला **"ब्रेकिंग न्यूज़"** टिकर।
+   - पूरी तरह उत्तरदायी (Responsive Layout) ग्रिड जो मोबाइल और डेस्कटॉप दोनों पर बेहतरीन अनुभव देता है।
 
-## Learning Laravel
+2. **अन्तरक्रियाशीलता (Interactivity):**
+   - **जिला समाचार टैब (District Bulletins):** मुख्य पृष्ठ पर बस्तर, रायपुर, बिलासपुर, दुर्ग और सरगुजा जिलों की खबरों के लिए बिना पेज रीलोड हुए तुरंत स्विच होने वाले गतिशील बटन्स।
+   - **मॉक ओपिनियन पोल (Interactive Opinion Poll):** पाठकों के लिए एक क्रियाशील पोल ब्लॉक जिसमें वोट करते ही परिणाम (Yes/No प्रतिशत) स्क्रीन पर दिखाई देते हैं।
+   - **नागरिक राय (Citizen Comments):** विस्तृत समाचारों पर पाठकों के लिए एक मॉक कमेंट फीड, जिसमें तत्काल कमेंट पोस्ट करने की सुविधा है।
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+3. **अभिगम्यता और सुगमता (Accessibility Panel):**
+   - **अक्षर आकार नियंत्रण (Font Scaling):** देवनागरी लिपि को सुगमता से पढ़ने के लिए मुख्य पृष्ठ और विस्तृत पठन पेज पर फ़ॉन्ट साइज़ को तुरंत छोटा/बड़ा करने (`A-`, `A`, `A+`) की सुविधा।
+   - **कंट्रास्ट मोड (High Contrast Toggle):** दृष्टि सुगमता के लिए ब्लैक और येलो कलर कॉम्बिनेशन वाला कंट्रास्ट टॉगल।
+   - **लाइव हिंदी कैलेंडर और घड़ी:** हिंदी पंचांग/तारीख और लाइव भारतीय समय (IST) का प्रदर्शन।
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+4. **प्रिंट अनुकूलित रूप (Print-Friendly Layout):**
+   - लेखों को प्रिंट या पीडीएफ में सेव करते समय बिना किसी अतिरिक्त नेविगेशन, विज्ञापन या हेडर/फूटर के एक साफ-सुथरा न्यूज़पेपर क्लिपिंग रूप प्रदान करने के लिए विशेष प्रिंट मीडिया शैलियाँ।
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 🛠️ तकनीकी स्टैक (Technology Stack)
 
-### Premium Partners
+- **फ्रेमवर्क:** Laravel 12.x (PHP 8.2+)
+- **डेटाबेस:** SQLite (सरल और पोर्टेबल डेवलपमेंट के लिए)
+- **स्टाइलिंग:** Tailwind CSS v4.0 (Vite कंपाइलर के साथ)
+- **फ्रंटएंड इंजन:** Laravel Blade templates, AlpineJS & Vanilla Javascript
+- **बंडल कंपाइलर:** Vite
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+---
 
-## Contributing
+## 📦 संस्थापन और सेटअप (Installation & Setup)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+स्थानीय स्तर पर इस परियोजना को चलाने के लिए नीचे दिए गए चरणों का पालन करें:
 
-## Code of Conduct
+### १. प्रोजेक्ट को क्लोन/ओपन करें
+सुनिश्चित करें कि आप न्यूज़ पोर्टल के मुख्य फ़ोल्डर (`news-portal`) में हैं।
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### २. एनवायरनमेंट फाइल सेटअप करें
+परियोजना में डेटाबेस के लिए SQLite कॉन्फ़िगर किया गया है। `.env` फ़ाइल में डेटाबेस कनेक्शन की जांच करें:
+```env
+DB_CONNECTION=sqlite
+```
+*नोट: `database/database.sqlite` नाम की फ़ाइल `database/` निर्देशिका में स्वतः मौजूद होनी चाहिए। यदि नहीं है, तो एक खाली फ़ाइल इस नाम से बना लें।*
 
-## Security Vulnerabilities
+### ३. कंपोजर और पैकेज इंस्टॉल करें
+टर्मिनल में रन करें:
+```bash
+composer install
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### ४. माइग्रेशन और सी़ड डेटा रन करें
+डेटाबेस टेबल बनाने और उसमें 15+ विस्तृत समाचार लेख, जिले और श्रेणियां डालने के लिए निम्नलिखित कमांड चलाएँ:
+```bash
+php artisan migrate:fresh --seed
+```
+*सीडर व्यवस्थापक क्रेडेंशियल बनाता है: `email: editor@cgnewsexpress.com` और `password: password123`*
 
-## License
+### ५. फ्रंटएंड एसेट्स कंपाइल करें
+एसेट्स और शैलियों को कंपाइल करने के लिए:
+```bash
+npm install
+npm run build
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### ६. लोकल सर्वर प्रारंभ करें
+लारावेल और वीट सर्वर को लाइव शुरू करने के लिए:
+```bash
+php artisan serve
+```
+वेबसाइट को अपने ब्राउज़र में **`http://127.0.0.1:8000`** पर खोलें।
+
+---
+
+## 📂 महत्वपूर्ण फाइलें और संरचना (Project Structure)
+
+परियोजना में किए गए प्रमुख बदलाव इन स्थानों पर केंद्रित हैं:
+
+- **रूट्स (Routing):** [`routes/web.php`](file:///c:/Users/Admin/Desktop/File/news-portal/routes/web.php) - समाचार और श्रेणियों के मार्गों की मैपिंग।
+- **नियंत्रक (Controller):** [`app/Http/Controllers/NewsController.php`](file:///c:/Users/Admin/Desktop/File/news-portal/app/Http/Controllers/NewsController.php) - मुख्य पृष्ठ, श्रेणी, जिला और खोज तर्क।
+- **डेटाबेस सी़डर (Seeding):** [`database/seeders/DatabaseSeeder.php`](file:///c:/Users/Admin/Desktop/File/news-portal/database/seeders/DatabaseSeeder.php) - हिंदी लेखों और जिलों का डेटा।
+- **थीम स्टाइलिंग:** [`resources/css/app.css`](file:///c:/Users/Admin/Desktop/File/news-portal/resources/css/app.css) - प्राइवेट न्यूज़ कलर्स औरanimations।
+- **लेआउट और व्यूज (Blade Views):**
+  - [`resources/views/layouts/app.blade.php`](file:///c:/Users/Admin/Desktop/File/news-portal/resources/views/layouts/app.blade.php) - मुख्य ढांचा, हेडर, एक्सेसिबिलिटी स्क्रिप्ट।
+  - [`resources/views/news/index.blade.php`](file:///c:/Users/Admin/Desktop/File/news-portal/resources/views/news/index.blade.php) - मुख्य पृष्ठ, जिला टैब्स, पोल विजेट।
+  - [`resources/views/news/show.blade.php`](file:///c:/Users/Admin/Desktop/File/news-portal/resources/views/news/show.blade.php) - समाचार पठन पेज, प्रिंट मोड।
+  - [`resources/views/news/category.blade.php`](file:///c:/Users/Admin/Desktop/File/news-portal/resources/views/news/category.blade.php) - श्रेणीवार समाचार।
+  - [`resources/views/news/district.blade.php`](file:///c:/Users/Admin/Desktop/File/news-portal/resources/views/news/district.blade.php) - जिलावार समाचार।
+  - [`resources/views/news/search.blade.php`](file:///c:/Users/Admin/Desktop/File/news-portal/resources/views/news/search.blade.php) - खोज परिणाम पेज।
