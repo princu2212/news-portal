@@ -105,6 +105,9 @@
                             @if($article->district)
                                 <span class="ml-2 pl-2 border-l border-gray-300">स्थान: <strong>{{ $article->district->name }}</strong></span>
                             @endif
+                            @if($article->source_url)
+                                <span class="ml-2 pl-2 border-l border-gray-300">स्रोत: <a href="{{ $article->source_url }}" target="_blank" class="text-brand-red hover:underline font-bold">मूल खबर लिंक &nearr;</a></span>
+                            @endif
                         </div>
                         <span>दिनांक: {{ $article->published_at->format('d M Y') }}</span>
                     </div>

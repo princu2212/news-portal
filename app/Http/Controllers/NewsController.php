@@ -15,10 +15,19 @@ class NewsController extends Controller
      */
     protected function getCommonData()
     {
+        $breakingNews = NewsArticle::breaking()->orderBy('published_at', 'desc')->take(8)->get();
+        if ($breakingNews->count() < 8) {
+            $extra = NewsArticle::whereNotIn('id', $breakingNews->pluck('id')->toArray())
+                ->orderBy('published_at', 'desc')
+                ->take(8 - $breakingNews->count())
+                ->get();
+            $breakingNews = $breakingNews->concat($extra);
+        }
+
         return [
             'navCategories' => Category::orderBy('id', 'asc')->get(),
             'navDistricts' => District::orderBy('name', 'asc')->get(),
-            'breakingNews' => NewsArticle::breaking()->orderBy('published_at', 'desc')->take(6)->get(),
+            'breakingNews' => $breakingNews,
         ];
     }
 
@@ -29,11 +38,19 @@ class NewsController extends Controller
     {
         $common = $this->getCommonData();
 
-        // Featured slider news (up to 4 articles)
-        $featuredNews = NewsArticle::featured()
+        // Featured slider news: latest 4 articles with images to look visually premium
+        $featuredNews = NewsArticle::whereNotNull('image_url')
             ->orderBy('published_at', 'desc')
             ->take(4)
             ->get();
+
+        if ($featuredNews->count() < 4) {
+            $extraFeatured = NewsArticle::whereNotIn('id', $featuredNews->pluck('id')->toArray())
+                ->orderBy('published_at', 'desc')
+                ->take(4 - $featuredNews->count())
+                ->get();
+            $featuredNews = $featuredNews->concat($extraFeatured);
+        }
 
         $featuredIds = $featuredNews->pluck('id')->toArray();
 

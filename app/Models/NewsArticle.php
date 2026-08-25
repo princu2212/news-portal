@@ -22,7 +22,9 @@ class NewsArticle extends Model
         'is_featured',
         'is_breaking',
         'views',
-        'published_at'
+        'published_at',
+        'rss_guid',
+        'source_url'
     ];
 
     protected $casts = [
@@ -69,5 +71,13 @@ class NewsArticle extends Model
     public function scopeBreaking(Builder $query): Builder
     {
         return $query->where('is_breaking', true);
+    }
+
+    /**
+     * Get the article's image URL, falling back to a default premium news image if none is present.
+     */
+    public function getImageUrlAttribute($value)
+    {
+        return $value ?: asset('images/default-news.jpg');
     }
 }

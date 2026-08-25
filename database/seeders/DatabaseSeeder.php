@@ -54,6 +54,26 @@ class DatabaseSeeder extends Seeder
                 'name' => 'टेक',
                 'slug' => 'tech',
                 'color' => '#8B5CF6'
+            ],
+            [
+                'name' => 'देश',
+                'slug' => 'national',
+                'color' => '#3B82F6'
+            ],
+            [
+                'name' => 'दुनिया',
+                'slug' => 'world',
+                'color' => '#10B981'
+            ],
+            [
+                'name' => 'छत्तीसगढ़',
+                'slug' => 'chhattisgarh',
+                'color' => '#F59E0B'
+            ],
+            [
+                'name' => 'मध्यप्रदेश',
+                'slug' => 'madhya-pradesh',
+                'color' => '#EF4444'
             ]
         ];
 
