@@ -29,12 +29,10 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 RUN npm ci || npm install
 RUN npm run build
 
-# Setup SQLite database and permissions
-RUN touch database/database.sqlite
-RUN php artisan migrate --force || true
-RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
-RUN chmod -R 777 storage bootstrap/cache database
+# Setup permissions
+RUN chmod -R 777 storage bootstrap/cache
+RUN chmod +x docker-entrypoint.sh
 
 EXPOSE 8080
 
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8080"]
+ENTRYPOINT ["/var/www/docker-entrypoint.sh"]
