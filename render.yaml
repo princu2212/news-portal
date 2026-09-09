@@ -11,12 +11,14 @@ services:
       - key: APP_ENV
         value: production
       - key: APP_KEY
-        generateValue: true
+        value: "base64:2KGmjKQzfxrmNMAVssWjOohIh6Nz13Tq+TSIr3Bkivo="
       - key: APP_DEBUG
         value: "false"
       - key: DB_CONNECTION
         value: sqlite
+      - key: DB_DATABASE
+        value: /var/www/database/database.sqlite
       - key: LOG_CHANNEL
-        value: stderr
+        value: errorlog
       - key: SESSION_DRIVER
         value: cookie
