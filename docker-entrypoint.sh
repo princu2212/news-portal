@@ -46,5 +46,8 @@ php artisan view:cache || true
 # Bind to the port assigned by Render ($PORT) or fallback to 8080
 PORT="${PORT:-8080}"
 
+# Start background worker to auto-fetch new RSS feeds every 5 minutes
+(while true; do sleep 300; php artisan news:fetch-rss > /dev/null 2>&1; done &)
+
 echo "CG News Express starting on port $PORT..."
 exec php artisan serve --host=0.0.0.0 --port="$PORT"
