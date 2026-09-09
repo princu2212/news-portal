@@ -17,11 +17,13 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // 1. Create a Default Admin User
-        User::factory()->create([
-            'name' => 'संपादक सीजी न्यूज़',
-            'email' => 'editor@cgnewsexpress.com',
-            'password' => bcrypt('password123'),
-        ]);
+        User::firstOrCreate(
+            ['email' => 'editor@cgnewsexpress.com'],
+            [
+                'name' => 'संपादक सीजी न्यूज़',
+                'password' => bcrypt('password123'),
+            ]
+        );
 
         // 2. Seed News Categories (Private Media style)
         $categories = [
@@ -79,7 +81,7 @@ class DatabaseSeeder extends Seeder
 
         $categoryModels = [];
         foreach ($categories as $cat) {
-            $categoryModels[$cat['slug']] = Category::create($cat);
+            $categoryModels[$cat['slug']] = Category::firstOrCreate(['slug' => $cat['slug']], $cat);
         }
 
         // 3. Seed Districts
@@ -95,7 +97,7 @@ class DatabaseSeeder extends Seeder
 
         $districtModels = [];
         foreach ($districts as $dist) {
-            $districtModels[$dist['slug']] = District::create($dist);
+            $districtModels[$dist['slug']] = District::firstOrCreate(['slug' => $dist['slug']], $dist);
         }
 
         // 4. Seed Tags
@@ -112,7 +114,7 @@ class DatabaseSeeder extends Seeder
 
         $tagModels = [];
         foreach ($tags as $tag) {
-            $tagModels[$tag['slug']] = Tag::create($tag);
+            $tagModels[$tag['slug']] = Tag::firstOrCreate(['slug' => $tag['slug']], $tag);
         }
 
         // 5. Seed News Articles (Private journalistic reporting)
@@ -237,24 +239,27 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($articles as $art) {
-            $cat = $categoryModels[$art['category_slug']];
-            $dist = isset($art['district_slug']) ? $districtModels[$art['district_slug']] : null;
+            $cat = $categoryModels[$art['category_slug']] ?? null;
+            if (!$cat) continue;
+            $dist = isset($art['district_slug']) ? ($districtModels[$art['district_slug']] ?? null) : null;
 
-            $articleModel = NewsArticle::create([
-                'category_id' => $cat->id,
-                'district_id' => $dist ? $dist->id : null,
-                'title' => $art['title'],
-                'slug' => $art['slug'],
-                'summary' => $art['summary'],
-                'content' => $art['content'],
-                'image_url' => $art['image_url'],
-                'document_no' => null, // Private portal doesn't require official doc numbers
-                'is_featured' => $art['is_featured'],
-                'is_breaking' => $art['is_breaking'],
-                'views' => $art['views'],
-                'published_at' => now()->subHours(rand(1, 100)),
-                'author_name' => 'न्यूज़ डेस्क',
-            ]);
+            $articleModel = NewsArticle::firstOrCreate(
+                ['slug' => $art['slug']],
+                [
+                    'category_id' => $cat->id,
+                    'district_id' => $dist ? $dist->id : null,
+                    'title' => $art['title'],
+                    'summary' => $art['summary'],
+                    'content' => $art['content'],
+                    'image_url' => $art['image_url'],
+                    'document_no' => null, // Private portal doesn't require official doc numbers
+                    'is_featured' => $art['is_featured'],
+                    'is_breaking' => $art['is_breaking'],
+                    'views' => $art['views'],
+                    'published_at' => now()->subHours(rand(1, 100)),
+                    'author_name' => 'न्यूज़ डेस्क',
+                ]
+            );
 
             // Sync tags
             $syncedTags = [];
