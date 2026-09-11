@@ -140,17 +140,26 @@
                     <span>होम</span>
                 </a>
 
-                @if(isset($navCategories))
-                    @foreach($navCategories as $cat)
-                        <a href="{{ route('news.category', $cat->slug) }}"
-                            class="px-4 py-3.5 text-sm font-semibold hover:bg-brand-red transition-all duration-150 {{ isset($category) && $category->id == $cat->id ? 'bg-brand-red text-white border-b-2 border-white' : '' }}">
-                            {{ $cat->name }}
+                {{-- @if(isset($navCategories))
+                @foreach($navCategories as $cat)
+                <a href="{{ route('news.category', $cat->slug) }}"
+                    class="px-4 py-3.5 text-sm font-semibold hover:bg-brand-red transition-all duration-150 {{ isset($category) && $category->id == $cat->id ? 'bg-brand-red text-white border-b-2 border-white' : '' }}">
+                    {{ $cat->name }}
+                </a>
+                @endforeach
+                @endif --}}
+
+                @if(isset($navDistricts))
+                    @foreach($navDistricts as $dist)
+                        <a href="{{ route('news.district', $dist->slug) }}"
+                            class="block px-4 py-2 text-sm font-medium hover:bg-gray-100 hover:text-brand-red transition-colors duration-150">
+                            {{ $dist->name }}
                         </a>
                     @endforeach
                 @endif
 
                 <!-- Districts Dropdown -->
-                <div class="relative group whitespace-nowrap">
+                {{-- <div class="relative group whitespace-nowrap">
                     <button
                         class="px-4 py-3.5 text-sm font-semibold hover:bg-brand-red flex items-center space-x-1 focus:outline-none transition-all duration-150 {{ isset($district) ? 'bg-brand-red text-white' : '' }}">
                         <span>जिला समाचार</span>
@@ -165,15 +174,15 @@
                     <div
                         class="absolute left-0 mt-0 bg-white text-gray-800 shadow-xl rounded-b-md border border-gray-150 w-52 py-2 hidden group-hover:block hover:block z-40">
                         @if(isset($navDistricts))
-                            @foreach($navDistricts as $dist)
-                                <a href="{{ route('news.district', $dist->slug) }}"
-                                    class="block px-4 py-2 text-sm font-medium hover:bg-gray-100 hover:text-brand-red transition-colors duration-150">
-                                    {{ $dist->name }} बुलेटिन
-                                </a>
-                            @endforeach
+                        @foreach($navDistricts as $dist)
+                        <a href="{{ route('news.district', $dist->slug) }}"
+                            class="block px-4 py-2 text-sm font-medium hover:bg-gray-100 hover:text-brand-red transition-colors duration-150">
+                            {{ $dist->name }} बुलेटिन
+                        </a>
+                        @endforeach
                         @endif
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
     </nav>
