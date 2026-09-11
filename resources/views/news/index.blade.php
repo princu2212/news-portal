@@ -99,7 +99,7 @@
                                         {{ $item->category->name }}
                                     </span>
                                     <span class="text-[10px] text-gray-400">{{ $item->district ? $item->district->name . '
-                                                बुलेटिन' : $item->author_name }}</span>
+                                                        बुलेटिन' : $item->author_name }}</span>
                                 </div>
                                 <h3 class="text-base font-bold text-gray-900 hover:text-brand-red line-clamp-2 leading-snug">
                                     <a href="{{ route('news.show', $item->slug) }}">{{ $item->title }}</a>
@@ -280,7 +280,7 @@
         <aside class="lg:col-span-4 space-y-8">
 
             <!-- Widget 1: Interactive Opinion Poll (ओपिनियन पोल) - Replaces CM Panel -->
-            <div id="opinion-poll-card"
+            {{-- <div id="opinion-poll-card"
                 class="bg-gradient-to-b from-brand-dark to-brand-dark-deep text-white rounded-xl shadow-lg border border-brand-dark-deep overflow-hidden">
                 <div
                     class="bg-brand-red text-white text-xs font-bold uppercase py-2.5 px-4 flex justify-between items-center">
@@ -350,7 +350,7 @@
                         प्रतिक्रिया देने के लिए धन्यवाद! कुल वोट: ४,८१२
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             <!-- Widget 2: Popular Releases (लोकप्रिय ख़बरें) -->
             <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-2xs space-y-4">

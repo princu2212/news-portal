@@ -24,7 +24,7 @@ class FetchNewsRss extends Command
      *
      * @var string
      */
-    protected $description = 'Fetch news articles from RSS feeds of IBC24, Vistaar News, and NDTV MPCG';
+    protected $description = 'Fetch news articles from RSS feeds and APIs of CMO Chhattisgarh, Jansampark DPR, IBC24, Vistaar News, and DPRCG';
 
     /**
      * Execute the console command.
@@ -38,19 +38,34 @@ class FetchNewsRss extends Command
 
         $feeds = [
             [
+                'name' => 'CMO Chhattisgarh RSS',
+                'url' => 'https://news.google.com/rss/search?q=site:cmo.cg.gov.in&hl=hi&gl=IN&ceid=IN:hi',
+                'author' => 'मुख्यमंत्री कार्यालय छत्तीसगढ़ (CMO CG)',
+                'default_source' => 'https://cmo.cg.gov.in/'
+            ],
+            [
+                'name' => 'Jansampark DPR News Portal RSS',
+                'url' => 'https://news.google.com/rss/search?q=site:jansampark.cg.gov.in&hl=hi&gl=IN&ceid=IN:hi',
+                'author' => 'छत्तीसगढ़ जनसंपर्क (Jansampark DPR)',
+                'default_source' => 'https://jansampark.cg.gov.in/dprnewsportal/'
+            ],
+            [
+                'name' => 'DPRCG Portal RSS',
+                'url' => 'https://news.google.com/rss/search?q=site:dprcg.gov.in&hl=hi&gl=IN&ceid=IN:hi',
+                'author' => 'छत्तीसगढ़ जनसंपर्क (DPRCG)',
+                'default_source' => 'https://dprcg.gov.in/'
+            ],
+            [
                 'name' => 'IBC24',
                 'url' => 'https://www.ibc24.in/feed',
-                'author' => 'IBC24 न्यूज़'
+                'author' => 'IBC24 न्यूज़',
+                'default_source' => 'https://www.ibc24.in/'
             ],
             [
                 'name' => 'Vistaar News',
                 'url' => 'https://vistaarnews.com/feed',
-                'author' => 'Vistaar NEWS'
-            ],
-            [
-                'name' => 'DPRCG',
-                'url' => 'https://news.google.com/rss/search?q=site:dprcg.gov.in&hl=hi&gl=IN&ceid=IN:hi',
-                'author' => 'छत्तीसगढ़ जनसंपर्क (DPRCG)'
+                'author' => 'Vistaar NEWS',
+                'default_source' => 'https://vistaarnews.com/'
             ]
         ];
 
@@ -67,6 +82,10 @@ class FetchNewsRss extends Command
         $totalImported = 0;
         $totalSkipped = 0;
 
+        // 1. Fetch high-fidelity articles directly from CMO Chhattisgarh Official Portal API
+        $this->fetchCmoDirectArticles($dryRun, $categories, $districts, $totalProcessed, $totalImported, $totalSkipped);
+
+        // 2. Fetch standard RSS feeds
         foreach ($feeds as $feed) {
             $this->info("Fetching feed from: {$feed['name']} ({$feed['url']})...");
 
@@ -74,7 +93,7 @@ class FetchNewsRss extends Command
                 $response = Http::withHeaders([
                     'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
                     'Accept' => 'application/xml,text/xml,*/*',
-                ])->timeout(15)->get($feed['url']);
+                ])->withoutVerifying()->timeout(15)->get($feed['url']);
 
                 if ($response->failed()) {
                     $this->error("Failed to fetch feed: HTTP Code " . $response->status());
@@ -110,13 +129,34 @@ class FetchNewsRss extends Command
                     }
 
                     $originalLink = (string)$item->link;
+                    if (empty($originalLink) && isset($feed['default_source'])) {
+                        $originalLink = $feed['default_source'];
+                    }
 
                     // 2. Extract and clean Title
                     $title = (string)$item->title;
                     // Strip common publisher suffixes in RSS headlines
+                    $title = preg_replace('/\s*-\s*Jansampark\s*CG\s*.*$/iu', '', $title);
+                    $title = preg_replace('/\s*-\s*Chief\s*Minister\s*Office\s*.*$/iu', '', $title);
+                    $title = preg_replace('/\s*-\s*DPR\s*CG\s*.*$/iu', '', $title);
                     $title = preg_replace('/\s*-\s*Vistaar\s+.*$/iu', '', $title);
                     $title = preg_replace('/\s*-\s*IBC24\s*.*$/iu', '', $title);
                     $title = trim($title);
+
+                    if (empty($title) || in_array(mb_strtolower($title, 'UTF-8'), [
+                        'dpr cg',
+                        'jansampark cg',
+                        'jansampark',
+                        'jansampark.cg.gov.in',
+                        'cmo.cg.gov.in',
+                        'chief minister office',
+                        'chief minister office - chhattisgarh',
+                        'chief minister office - government of chhattisgarh',
+                        'ibc24',
+                        'vistaar news'
+                    ]) || mb_strlen($title, 'UTF-8') < 8) {
+                        continue;
+                    }
 
                     // 3. Generate Transliterated Slug
                     $slug = Str::slug($title);
@@ -226,6 +266,171 @@ class FetchNewsRss extends Command
         $this->info("Skipped (duplicates): {$totalSkipped}");
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * Direct collector for Chief Minister Office (cmo.cg.gov.in) portal articles.
+     */
+    private function fetchCmoDirectArticles($dryRun, $categories, $districts, &$totalProcessed, &$totalImported, &$totalSkipped)
+    {
+        $this->info("Fetching official updates from CMO Chhattisgarh Portal API (https://cmo.cg.gov.in/)...");
+
+        try {
+            $payload = [
+                'listType' => 1,
+                'categoryId' => 2, // News Updates
+                'statusCode' => 3, // Verified
+                'pageNo' => 1,
+                'pageSize' => 20,
+                'orderBy' => 2,
+                'sortOrder' => 'DESC',
+                'eventDateTimeStart' => '',
+                'eventDateTimeEnd' => '',
+                'filterKey' => '',
+                'isPublic' => 1,
+                'isActive' => 1
+            ];
+
+            $response = Http::withHeaders([
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json'
+            ])->withoutVerifying()->timeout(15)->post('https://cmo.cg.gov.in/cmocgmainapi/api/ArticleDetails/GetArticleDetailsList', $payload);
+
+            if ($response->failed()) {
+                $this->warn("CMO API returned status " . $response->status());
+                return;
+            }
+
+            $data = $response->json();
+            $articles = $data['tables'][0] ?? [];
+            $count = 0;
+
+            foreach ($articles as $art) {
+                $totalProcessed++;
+
+                $articleId = $art['articleId'] ?? null;
+                $guid = 'cmo-' . $articleId;
+                $title = trim($art['subjectHindi'] ?? $art['subjectEnglish'] ?? '');
+
+                if (empty($title)) {
+                    continue;
+                }
+
+                $slug = Str::slug($title);
+                if (empty($slug)) {
+                    $slug = Str::slug(Str::ascii($title));
+                }
+
+                $exists = NewsArticle::where('rss_guid', $guid)
+                    ->orWhere('slug', $slug)
+                    ->exists();
+
+                if ($exists) {
+                    $totalSkipped++;
+                    continue;
+                }
+
+                $publishedAtStr = $art['creationDate'] ?? $art['publishDate'] ?? null;
+                $publishedAt = $publishedAtStr ? Carbon::parse($publishedAtStr) : Carbon::now();
+
+                // Extract high-res featured cover image from uploadFiles
+                $imageUrl = null;
+                $htmlFilePath = null;
+                $uploadFiles = json_decode($art['uploadFiles'] ?? '[]', true);
+
+                if (is_array($uploadFiles)) {
+                    foreach ($uploadFiles as $file) {
+                        // docType 1 is image (imageSize 3 is Large, 2 is Medium, 1 is Small)
+                        if (($file['docType'] ?? null) == 1 && empty($imageUrl)) {
+                            if (!empty($file['filePath'])) {
+                                $imageUrl = 'https://cmo.cg.gov.in' . $file['filePath'];
+                            }
+                        }
+                        // docType 4 is Hindi HTML content
+                        if (($file['docType'] ?? null) == 4 && !empty($file['filePath'])) {
+                            $htmlFilePath = 'https://cmo.cg.gov.in' . $file['filePath'];
+                        }
+                    }
+                }
+
+                // Fetch rich Hindi HTML body if available
+                $cleanContent = '';
+                if ($htmlFilePath) {
+                    try {
+                        $htmlRes = Http::withHeaders([
+                            'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                        ])->withoutVerifying()->timeout(8)->get($htmlFilePath);
+
+                        if ($htmlRes->successful()) {
+                            $rawBody = $htmlRes->body();
+                            $cleanContent = preg_replace('/<\/p>/i', "\n\n", $rawBody);
+                            $cleanContent = preg_replace('/<br\s*\/?>/i', "\n", $cleanContent);
+                            $cleanContent = strip_tags($cleanContent);
+                            $cleanContent = html_entity_decode($cleanContent, ENT_QUOTES, 'UTF-8');
+                            $cleanContent = preg_replace('/\n{3,}/', "\n\n", $cleanContent);
+                            $cleanContent = trim($cleanContent);
+                        }
+                    } catch (\Exception $e) {
+                        // Fallback below
+                    }
+                }
+
+                if (empty($cleanContent)) {
+                    $cleanContent = trim($art['shortDescriptionHindi'] ?? $art['shortDescriptionEnglish'] ?? '');
+                }
+                if (empty($cleanContent)) {
+                    $cleanContent = $title . "\n\nअधिक जानकारी के लिए मुख्यमंत्री कार्यालय छत्तीसगढ़ के आधिकारिक पोर्टल पर जाएं।";
+                }
+
+                $summary = trim($art['shortDescriptionHindi'] ?? $art['shortDescriptionEnglish'] ?? '');
+                if (empty($summary)) {
+                    $summary = Str::limit($cleanContent, 180, '...');
+                } else {
+                    $summary = Str::limit(strip_tags(html_entity_decode($summary, ENT_QUOTES, 'UTF-8')), 180, '...');
+                }
+
+                $category = $this->determineCategory($title, $cleanContent, null, $categories);
+                $district = $this->determineDistrict($title, $cleanContent, $districts);
+                $sourceUrl = 'https://cmo.cg.gov.in/news/' . Str::slug($title) . '/' . $articleId;
+
+                $count++;
+                $totalImported++;
+
+                if ($dryRun) {
+                    $this->info("  [DRY RUN - CMO API] Would import: \"{$title}\"");
+                    $this->line("    - GUID: {$guid}");
+                    $this->line("    - Category: {$category->name} ({$category->slug})");
+                    $this->line("    - District: " . ($district ? "{$district->name} ({$district->slug})" : "None"));
+                    $this->line("    - Image: " . ($imageUrl ?: "None"));
+                    $this->line("    - Date: " . $publishedAt->toDateTimeString());
+                    $this->line("    - Summary: " . Str::limit($summary, 80));
+                    $this->line("    - Source URL: " . $sourceUrl);
+                    $this->line("");
+                } else {
+                    NewsArticle::create([
+                        'category_id' => $category->id,
+                        'district_id' => $district ? $district->id : null,
+                        'title' => $title,
+                        'slug' => $slug,
+                        'summary' => $summary,
+                        'content' => $cleanContent,
+                        'image_url' => $imageUrl,
+                        'author_name' => 'मुख्यमंत्री कार्यालय छत्तीसगढ़ (CMO CG)',
+                        'source_url' => $sourceUrl,
+                        'rss_guid' => $guid,
+                        'published_at' => $publishedAt,
+                        'is_featured' => false,
+                        'is_breaking' => false,
+                        'views' => 0
+                    ]);
+                }
+            }
+
+            $this->info("Completed CMO Official Portal: Imported {$count} new articles.");
+        } catch (\Exception $e) {
+            $this->error("An exception occurred while processing CMO Portal API: " . $e->getMessage());
+        }
     }
 
     /**

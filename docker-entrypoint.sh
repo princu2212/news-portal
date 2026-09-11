@@ -36,7 +36,7 @@ php artisan migrate --force
 echo "Seeding categories, districts, and articles..."
 php artisan db:seed --force
 
-echo "Fetching live RSS feeds (IBC24, DPRCG, Vistaar)..."
+echo "Fetching live feeds (CMO Chhattisgarh, Jansampark DPR, IBC24, Vistaar)..."
 php artisan news:fetch-rss || true
 
 # Cache routes and views for optimal speed
