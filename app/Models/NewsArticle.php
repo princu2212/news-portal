@@ -78,6 +78,22 @@ class NewsArticle extends Model
      */
     public function getImageUrlAttribute($value)
     {
-        return $value ?: asset('images/default-news.jpg');
+        if (empty($value)) {
+            return asset('images/default-news.jpg');
+        }
+
+        if (str_starts_with($value, 'http://') || str_starts_with($value, 'https://')) {
+            return $value;
+        }
+
+        if (str_starts_with($value, '/')) {
+            return asset(ltrim($value, '/'));
+        }
+
+        if (str_starts_with($value, 'storage/')) {
+            return asset($value);
+        }
+
+        return asset('storage/' . $value);
     }
 }

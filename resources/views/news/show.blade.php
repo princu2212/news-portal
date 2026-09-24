@@ -67,6 +67,37 @@
             <span class="text-gray-600 line-clamp-1">{{ $article->title }}</span>
         </nav>
 
+        @auth
+            <!-- Admin Quick Actions Bar for this article -->
+            <div class="no-print bg-gradient-to-r from-gray-900 to-brand-dark text-white p-3.5 rounded-xl border border-gray-700 shadow-md flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div class="flex items-center space-x-2.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-brand-red animate-pulse"></span>
+                    <span class="text-xs font-semibold">
+                        <strong>एडमिन मोड:</strong> आप इस समाचार को लाइव संपादित कर सकते हैं।
+                    </span>
+                    @if($article->is_breaking)
+                        <span class="bg-red-950 text-red-300 text-[10px] font-bold px-2 py-0.5 rounded border border-red-800">🔥 ब्रेकिंग टिकर में सक्रिय</span>
+                    @endif
+                    @if($article->is_featured)
+                        <span class="bg-amber-950 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded border border-amber-800">⭐ मुख्य स्लाइडर में सक्रिय</span>
+                    @endif
+                </div>
+                <div class="flex items-center space-x-2">
+                    <a href="{{ route('admin.news.edit', $article->id) }}"
+                        class="bg-brand-red hover:bg-brand-red-dark text-white font-bold px-3 py-1.5 rounded-lg text-xs transition flex items-center space-x-1 shadow-xs">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                        <span>समाचार संपादित करें (Edit)</span>
+                    </a>
+                    <a href="{{ route('admin.dashboard') }}"
+                        class="bg-gray-800 hover:bg-gray-700 text-gray-200 font-bold px-3 py-1.5 rounded-lg text-xs border border-gray-600 transition">
+                        एडमिन डैशबोर्ड
+                    </a>
+                </div>
+            </div>
+        @endauth
+
         <!-- Sleek Print Header (Only visible during print) -->
         <div class="print-header text-center space-y-1 border-b border-brand-red pb-4">
             <h1 class="text-2xl font-black text-brand-dark">छत्तीसगढ़ न्यूज़ एक्सप्रेस</h1>
